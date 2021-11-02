@@ -14,14 +14,15 @@ import org.subethamail.smtp.auth.UsernamePasswordValidator;
 @Configuration
 public class SimpleAuthValidatorImpl implements UsernamePasswordValidator {
 
-    private final String CREDENTIALS_LOGIN = "superus3r";
-    private final String CREDENTIALS_PASSWORD = "passw0rd";
+    private final String CREDENTIALS_LOGIN = "yrc@yanrc.net";
+    private final String CREDENTIALS_PASSWORD = "123456";
 
     @Override
     public void login(String username, String password, MessageContext context) throws LoginFailedException {
-        if(CREDENTIALS_LOGIN.equals(username) && CREDENTIALS_PASSWORD.equals(password)){
+        System.out.printf(String.format("login:%s,psd:%s", username, password));
+        if (CREDENTIALS_LOGIN.equals(username) && CREDENTIALS_PASSWORD.equals(password)) {
             System.out.println("Authenticated successfully");
-        }else{
+        } else {
             System.err.println("Invalid authentication !");
             throw new LoginFailedException();
         }

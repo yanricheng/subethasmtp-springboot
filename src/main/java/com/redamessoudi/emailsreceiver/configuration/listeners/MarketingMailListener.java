@@ -1,9 +1,12 @@
 package com.redamessoudi.emailsreceiver.configuration.listeners;
 
 import com.redamessoudi.emailsreceiver.services.EmailContentService;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.IOUtils;
 import org.springframework.context.annotation.Configuration;
 import org.subethamail.smtp.helper.SimpleMessageListener;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
 /**
@@ -15,7 +18,7 @@ import java.io.InputStream;
 @Configuration
 public class MarketingMailListener implements SimpleMessageListener {
 
-    private static final String MARKETING_DOMAIN = "@marketing.company.com";
+    private static final String MARKETING_DOMAIN = "@yanrc.net";
     private final EmailContentService emailContentService;
 
 
@@ -26,23 +29,26 @@ public class MarketingMailListener implements SimpleMessageListener {
     /**
      * Check if the received email is for this listener based on business logic (recipient email address)
      *
-     * @param from is a the sender email address.
+     * @param from      is a the sender email address.
      * @param recipient is a the recipient email address.
-     *
      * @return true if the recipient is an address of MARKETING department.
      */
     @Override
     public boolean accept(String from, String recipient) {
-        System.out.println("Recipient : "+recipient);
+        System.out.println("Recipient : " + recipient);
         return recipient != null && recipient.endsWith(MARKETING_DOMAIN);
     }
 
     @Override
-    public void deliver(String from, String recipient, InputStream data) {
-        System.out.println("From : "+from);
-        System.out.println("Recipient : "+recipient);
+    public void deliver(String from, String recipient, InputStream originData) {
+        System.out.println("From : " + from);
+        System.out.println("Recipient : " + recipient);
+        ByteArrayOutputStream wrapData = new ByteArrayOutputStream();
         try {
-            emailContentService.extractReceivedEmail(data);
+            String data = IOUtils.toString(originData, Charsets.UTF_8);
+            System.out.println("content:");
+            System.out.println(data);
+            emailContentService.extractReceivedEmail(IOUtils.toInputStream(data, Charsets.UTF_8));
         } catch (Exception e) {
             e.printStackTrace();
         }
