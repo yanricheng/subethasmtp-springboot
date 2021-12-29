@@ -29,6 +29,7 @@ public class SMTPServerConfig {
                 .simpleMessageListener(this.marketingMsgListener)
                 .requireAuth(true)
                 .authenticationHandlerFactory(easyAuth)
+                .enableTLS()
                 .softwareName("--simple mail--")
                 .build();
 
